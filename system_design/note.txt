@@ -21,11 +21,19 @@ The API Gateway serves as a single entry point for clients. It routes requests t
 User Service Endpoints:
     /api/users/register
     /api/users/login
+    /api/users/{userId}                 -- edit user profile
+
 Message Service Endpoints:
     /api/messages/send
     /api/messages/{conversationId}
+    /api/messages/unsent/{messageId}    -- unsent a message
+    /api/messages/member                -- get list of all members in one group
+    /api/messages/read/{messageId}      -- get list of all members who read a message
+    /api/participant/{conversationiD}   -- add new member to a group
+
 WebSocket Service Endpoints:
     /ws (WebSocket connection)
+
 Notification Service:
     Usually internal, triggered by other services.
 
