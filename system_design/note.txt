@@ -1,0 +1,38 @@
+1. Microservices Architecture
+The application is divided into several microservices:
+WebSocket Service: Handles real-time communication between users.
+User Service: Manages user authentication, registration, and profile management.
+Message Service: Handles message creation, storage, retrieval, and status updates (e.g., read/unread).
+Notification Service: Manages push notifications and alerts when users receive new messages.
+
+
+2. Database Design
+The database is designed with scalability and searchability in mind. Below are the key tables and their relationships:
+Users: Stores user information.
+Conversations: Represents both private and group conversations.
+Participants: Links users to conversations.
+Messages: Stores message content and metadata.
+Message Status: Tracks the read/delivered status of each message for each participant.
+
+3. Microservices Interaction
+API Gateway
+The API Gateway serves as a single entry point for clients. It routes requests to the appropriate microservice based on the endpoint being accessed:
+
+User Service Endpoints:
+    /api/users/register
+    /api/users/login
+Message Service Endpoints:
+    /api/messages/send
+    /api/messages/{conversationId}
+WebSocket Service Endpoints:
+    /ws (WebSocket connection)
+Notification Service:
+    Usually internal, triggered by other services.
+
+
+99. To be added later
+- ElasticSearch
+- ConnectionPooling
+- Integration to front-end
+- Caching using Redis
+- 
