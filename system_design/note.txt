@@ -1,9 +1,9 @@
 1. Microservices Architecture
 The application is divided into several microservices:
-WebSocket Service: Handles real-time communication between users.
-User Service: Manages user authentication, registration, and profile management.
-Message Service: Handles message creation, storage, retrieval, and status updates (e.g., read/unread).
-Notification Service: Manages push notifications and alerts when users receive new messages.
+    WebSocket Service: Handles real-time communication between users.
+    User Service: Manages user authentication, registration, and profile management.
+    Message Service: Handles message creation, storage, retrieval, and status updates (e.g., read/unread).
+    Notification Service: Manages push notifications and alerts when users receive new messages.
 
 
 2. Database Design
@@ -19,28 +19,38 @@ API Gateway
 The API Gateway serves as a single entry point for clients. It routes requests to the appropriate microservice based on the endpoint being accessed:
 
 User Service Endpoints:
-    /api/users/register
-    /api/users/login
-    /api/users/{userId}                 -- edit user profile
+
+    POST /api/users/register
+    POST /api/users/login
+    PUT /api/users/{userId}                 -- edit user profile
 
 Message Service Endpoints:
-    /api/messages/send
-    /api/messages/{conversationId}
-    /api/messages/unsent/{messageId}    -- unsent a message
-    /api/messages/member                -- get list of all members in one group
-    /api/messages/read/{messageId}      -- get list of all members who read a message
-    /api/participant/{conversationiD}   -- add new member to a group
+The Service interact with User Service to get user data. Also interacting with Notification Service to push notifications when message is being sent
+    POST /api/messages/send                 -- store the message into db
+    GET /api/messages/{conversationId}      -- fetch all the message from a conversation (private chat or group)
+    PUT /api/messages/unsent/{messageId}    -- unsent a message
+    GET /api/messages/member                -- fetch list of all members in one group
+    GET /api/messages/read/{messageId}      -- fetch list of all members who read a message
+    POST /api/participant/{conversationiD}  -- add new member to a group
 
 WebSocket Service Endpoints:
+The microservice access the message service to interact the message with the database such as send the message to DB
     /ws (WebSocket connection)
 
 Notification Service:
     Usually internal, triggered by other services.
 
+4. Assumption
+    - The application doesn't have distributed database so there is no need for ensuring the uniqueness across entire distributed systems,
+      there is possibility to change the database to distributed database, but it is something to be determine later.
+    - Adding new contact can be achieved by using phone number which is unique
+     
 
 99. To be added later
+- Contact list functionality
+- Validation
+- Tag for checking param
 - ElasticSearch
 - ConnectionPooling
 - Integration to front-end
 - Caching using Redis
-- 
