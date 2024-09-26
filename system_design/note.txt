@@ -1,5 +1,5 @@
 1. Microservices Architecture
-The application is divided into several microservices:
+The application is divided into several microservices which implemented using gRPC:
     WebSocket Service: Handles real-time communication between users.
     User Service: Manages user authentication, registration, and profile management.
     Message Service: Handles message creation, storage, retrieval, and status updates (e.g., read/unread).
@@ -8,11 +8,13 @@ The application is divided into several microservices:
 
 2. Database Design
 The database is designed with scalability and searchability in mind. Below are the key tables and their relationships:
-Users: Stores user information.
-Conversations: Represents both private and group conversations.
-Participants: Links users to conversations.
-Messages: Stores message content and metadata.
-Message Status: Tracks the read/delivered status of each message for each participant.
+    Users: Stores user information.
+    Conversations: Represents both private and group conversations.
+    Participants: Links users to conversations.
+    Messages: Stores message content and metadata.
+    Message Status: Tracks the read/delivered status of each message for each participant.
+The database implemented in PostgreSQL due to scheme that more or less is fixed.
+
 
 3. Microservices Interaction
 API Gateway
@@ -22,7 +24,8 @@ User Service Endpoints:
 
     POST /api/users/register
     POST /api/users/login
-    PUT /api/users/{userId}                 -- edit user profile
+    GET /api/user/                         -- fetch user profile
+    PUT /api/user/                         -- edit user profile
 
 Message Service Endpoints:
 The Service interact with User Service to get user data. Also interacting with Notification Service to push notifications when message is being sent
@@ -44,13 +47,12 @@ Notification Service:
     - The application doesn't have distributed database so there is no need for ensuring the uniqueness across entire distributed systems,
       there is possibility to change the database to distributed database, but it is something to be determine later.
     - Adding new contact can be achieved by using phone number which is unique
-     
+    - password and phone number edit functionality is not provided (for this time)
 
 99. To be added later
 - Contact list functionality
 - Validation
 - Tag for checking param
 - ElasticSearch
-- ConnectionPooling
 - Integration to front-end
 - Caching using Redis
