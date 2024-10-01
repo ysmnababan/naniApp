@@ -1,6 +1,6 @@
-package entity
+package dto
 
-type UserEditResponse struct {
+type UserGetDataResponse struct {
 	Username    string
 	Email       string
 	PhoneNumber string

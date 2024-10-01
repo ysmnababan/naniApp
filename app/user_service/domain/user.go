@@ -1,4 +1,4 @@
-package models
+package domain
 
 type User struct {
 	UserID      int    `gorm:"primaryKey;autoIncrement" json:"user_id"`

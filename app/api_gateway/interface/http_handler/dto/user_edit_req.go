@@ -1,4 +1,4 @@
-package entity
+package dto
 
 type UserEditReq struct {
 	Username    string `json:"username"`

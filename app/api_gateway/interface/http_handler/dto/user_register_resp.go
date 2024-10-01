@@ -1,4 +1,4 @@
-package entity
+package dto
 
 type UserRegisterResp struct{
 	UserID      int    

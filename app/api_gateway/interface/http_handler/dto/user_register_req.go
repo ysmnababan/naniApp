@@ -1,4 +1,4 @@
-package entity
+package dto
 
 type UserRegisterReq struct {
 	Username    string `json:"username" binding:"required"`
