@@ -75,15 +75,15 @@ func (h *UserHandler) UpdateUser(ctx context.Context, in *pb.UpdateUserReq) (*pb
 		Picture_URL: &in.PictureUrl,
 	}
 
-	err := h.UserUsecaseI.UpdateUserData(&user)
+	updatedUser, err := h.UserUsecaseI.UpdateUserData(&user)
 	if err != nil {
 		return nil, err
 	}
 
 	return &pb.UpdateUserResp{
-		Username:    user.Username,
-		Email:       user.Email,
-		PhoneNumber: user.PhoneNumber,
-		PictureUrl:  *user.Picture_URL,
+		Username:    updatedUser.Username,
+		Email:       updatedUser.Email,
+		PhoneNumber: updatedUser.PhoneNumber,
+		PictureUrl:  *updatedUser.Picture_URL,
 	}, nil
 }

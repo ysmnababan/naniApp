@@ -39,7 +39,7 @@ func (r *Repo) FetchUserByEmail(email string) (*domain.User, error) {
 
 func (r *Repo) FetchUserByID(user_id string) (*domain.User, error) {
 	user := models.User{}
-	res := r.DB.First(&user, user_id)
+	res := r.DB.Where("user_id", user_id).First(&user)
 	if res.Error != nil {
 		return nil, res.Error
 	}

@@ -42,7 +42,7 @@ type UserUsecaseI interface {
 	Login(email, password string) (string, error)
 	Register(user *domain.User) error
 	GetUserData(user_id string) (*domain.User, error)
-	UpdateUserData(user *domain.User) error
+	UpdateUserData(user *domain.User) (*domain.User, error)
 }
 
 func (u *UserUsecase) Login(email, password string) (string, error) {
@@ -96,24 +96,24 @@ func (u *UserUsecase) GetUserData(user_id string) (*domain.User, error) {
 	return user, nil
 }
 
-func (u *UserUsecase) UpdateUserData(user *domain.User) error {
+func (u *UserUsecase) UpdateUserData(user *domain.User) (*domain.User, error) {
 	// fetch data from databasse first,
 	// if req data is not empty, then update
-	userDomain, err := u.UserRepositoryI.FetchUserByID(user.UserID)
+	userDB, err := u.UserRepositoryI.FetchUserByID(user.UserID)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// username cannot be empty
 	if user.Username != "" {
-		userDomain.Username = user.Username
+		userDB.Username = user.Username
 	}
-	userDomain.Picture_URL = user.Picture_URL
+	userDB.Picture_URL = user.Picture_URL
 
 	// update user data
-	err = u.UserRepositoryI.UpdateUser(user)
+	err = u.UserRepositoryI.UpdateUser(userDB)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return userDB, nil
 }
