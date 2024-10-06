@@ -27,6 +27,7 @@ require (
 	github.com/samborkent/uuidv7 v0.0.0-20231110121620-f2e19d87e48b // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect
+	github.com/ysmnababan/naniAppProto v1.0.0 // indirect
 	golang.org/x/net v0.28.0 // indirect
 	golang.org/x/sync v0.8.0 // indirect
 	golang.org/x/sys v0.25.0 // indirect

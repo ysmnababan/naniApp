@@ -4,7 +4,7 @@ import (
 	"context"
 	"user_service/domain"
 	"user_service/helper"
-	"user_service/interface/grpc_handler/pb"
+	"github.com/ysmnababan/naniAppProto/pb"
 	"user_service/usecase"
 )
 

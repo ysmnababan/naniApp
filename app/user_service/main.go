@@ -7,7 +7,7 @@ import (
 	"user_service/infrastructure/database/models"
 	"user_service/infrastructure/repository"
 	grpchandler "user_service/interface/grpc_handler"
-	"user_service/interface/grpc_handler/pb"
+	"github.com/ysmnababan/naniAppProto/pb"
 	"user_service/usecase"
 
 	"google.golang.org/grpc"
