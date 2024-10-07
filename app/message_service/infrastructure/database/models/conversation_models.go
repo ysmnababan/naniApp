@@ -8,7 +8,7 @@ import (
 
 type Conversation struct {
 	ConvID       string         `gorm:"type:char(36);primaryKey" json:"conv_id"`
-	ConvName     string         `gorm:"size:50;not null" json:"conv_name"`
+	ConvName     string         `gorm:"size:255;" json:"conv_name"`
 	ConvType     string         `gorm:"size:20;not null" json:"conv_type"` // enum for (PRIVATE, GROUP)
 	CreatedAt    time.Time      `gorm:"autoCreateTime"`
 	UpdatedAt    time.Time      `gorm:"autoUpdateTime"`
