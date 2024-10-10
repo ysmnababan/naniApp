@@ -2,55 +2,43 @@ version: '3.9'
 services:
   user-service:
     build:
-      context: ./user-service
+      context: ./user_service
       dockerfile: Dockerfile
     ports:
-      - "50051:50051"              # gRPC port for user service
-    environment:
-      - POSTGRES_HOST=postgres     # Referencing the PostgreSQL service
-      - POSTGRES_PORT=5432
-      - POSTGRES_USER=myuser
-      - POSTGRES_PASSWORD=mypassword
-      - POSTGRES_DB=mydb
+      - "${USER_PORT}:${USER_PORT}"              # gRPC port for user service
+    env_file:
+      - ./user_service/.env                       # Load env specific to user service
     depends_on:
-      - postgres                   # Ensure PostgreSQL is started before this service
+      - postgres
 
   message-service:
     build:
-      context: ./message-service
+      context: ./message_service
       dockerfile: Dockerfile
     ports:
-      - "50052:50052"              # gRPC port for message service
-    environment:
-      - POSTGRES_HOST=postgres
-      - POSTGRES_PORT=5432
-      - POSTGRES_USER=myuser
-      - POSTGRES_PASSWORD=mypassword
-      - POSTGRES_DB=mydb
+      - "${MESSAGE_PORT}:${MESSAGE_PORT}"        # gRPC port for message service
+    env_file:
+      - ./message_service/.env                    # Load env specific to message service
     depends_on:
       - postgres
 
   api-gateway:
     build:
-      context: ./gateway
+      context: ./api_gateway
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"                # HTTP port for API Gateway
+      - "${GATEWAY_PORT}:${GATEWAY_PORT}"                              # HTTP port for API Gateway
     depends_on:
       - user-service
       - message-service
 
   postgres:
-    image: postgres:14             # Use PostgreSQL version 14 image
+    image: postgres:14
     container_name: postgres
-    environment:
-      - POSTGRES_USER=myuser       # Database username
-      - POSTGRES_PASSWORD=mypassword # Database password
-      - POSTGRES_DB=mydb           # Default database name
     volumes:
-      - pgdata:/var/lib/postgresql/data # Persist database data to avoid data loss on restart
+      - pgdata:/var/lib/postgresql/data
     ports:
-      - "5432:5432"                # Expose PostgreSQL port
+      - "5433:5432"
 
 volumes:
   pgdata:

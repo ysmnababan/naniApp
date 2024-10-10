@@ -31,4 +31,5 @@ func main() {
 	messageRepo := &repository.Repo{DB: db}
 	messageUsecase := &usecase.MessageUsecase{MessageRepoI: messageRepo, UserClient: client}
 	_ = messageUsecase
+
 }

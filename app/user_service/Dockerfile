@@ -1,5 +1,5 @@
 # Build stage
-FROM golang:1.20-alpine AS builder
+FROM golang:1.22.2-alpine AS builder
 WORKDIR /app
 
 # Copy go.mod and go.sum
@@ -17,8 +17,12 @@ FROM alpine:3.16
 WORKDIR /app
 COPY --from=builder /app/user-service /app/
 
+# Copy the .env file to the final image
+COPY .env /app/.env
+
 # Expose the port the service listens to
 EXPOSE 50051
 
 # Run the service
-CMD ["./user-service"]
+# CMD ["./user-service"]
+CMD ["sh", "-c", "ls -la && ./user-service"]

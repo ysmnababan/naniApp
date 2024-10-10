@@ -1,10 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net"
 	"os"
 	"user_service/infrastructure/database"
+	"user_service/infrastructure/database/models"
 	"user_service/infrastructure/repository"
 	grpchandler "user_service/interface/grpc_handler"
 	"user_service/usecase"
@@ -20,11 +22,12 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println(os.Getenv("USER_PORT"))
 }
 
 func main() {
 	db := database.Connect()
-	// db.AutoMigrate(models.User{})
+	db.AutoMigrate(models.User{})
 	repo := &repository.Repo{DB: db}
 	userUsecase := &usecase.UserUsecase{UserRepositoryI: repo}
 	userHandler := &grpchandler.UserHandler{UserUsecaseI: userUsecase}
@@ -32,7 +35,7 @@ func main() {
 	grpcServer := grpc.NewServer()
 	pb.RegisterUserServiceServer(grpcServer, userHandler)
 
-	listen, err := net.Listen("tcp", ":"+os.Getenv("PORT"))
+	listen, err := net.Listen("tcp", ":"+os.Getenv("USER_PORT"))
 	if err != nil {
 		log.Println(err)
 	}
