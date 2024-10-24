@@ -28,6 +28,7 @@ func init() {
 func main() {
 	db := database.Connect()
 	db.AutoMigrate(models.User{})
+	db.AutoMigrate(models.Phonebook{})
 	repo := &repository.Repo{DB: db}
 	userUsecase := &usecase.UserUsecase{UserRepositoryI: repo}
 	userHandler := &grpchandler.UserHandler{UserUsecaseI: userUsecase}

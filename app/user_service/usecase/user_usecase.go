@@ -46,7 +46,7 @@ type UserUsecaseI interface {
 
 	GetContacts(user_id string) ([]*domain.Phonebook, error)
 	CreateNewContact(phone_number string, contact *domain.Phonebook) error
-	EditNickname(nickname string, contact *domain.Phonebook) error
+	EditNickname(nickname string, phonebook_id string) error
 }
 
 func (u *UserUsecase) GetContacts(user_id string) ([]*domain.Phonebook, error) {
