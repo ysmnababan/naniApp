@@ -8,7 +8,7 @@ require (
 	github.com/labstack/echo/v4 v4.12.0
 	github.com/samborkent/uuidv7 v0.0.0-20231110121620-f2e19d87e48b
 	github.com/sirupsen/logrus v1.9.3
-	github.com/ysmnababan/naniAppProto v1.0.0
+	github.com/ysmnababan/naniAppProto v1.1.0
 	golang.org/x/crypto v0.27.0
 	google.golang.org/grpc v1.67.1
 	gorm.io/driver/postgres v1.5.9

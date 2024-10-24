@@ -43,8 +43,8 @@ github.com/valyala/bytebufferpool v1.0.0 h1:GqA5TC/0021Y/b9FG4Oi9Mr3q7XYx6Kllzaw
 github.com/valyala/bytebufferpool v1.0.0/go.mod h1:6bBcMArwyJ5K/AmCkWv1jt77kVWyCJ6HpOuEn7z0Csc=
 github.com/valyala/fasttemplate v1.2.2 h1:lxLXG0uE3Qnshl9QyaK6XJxMXlQZELvChBOCmQD0Loo=
 github.com/valyala/fasttemplate v1.2.2/go.mod h1:KHLXt3tVN2HBp8eijSv/kGJopbvo7S+qRAEEKiv+SiQ=
-github.com/ysmnababan/naniAppProto v1.0.0 h1:riaVfgzMlqFZKIYaGOIA0x/JlwlS3bHy4QwlQ8Qop8M=
-github.com/ysmnababan/naniAppProto v1.0.0/go.mod h1:oZKTpSBf/6A1kJhindWusmtmwZvdSD32sg9aoNR5r8g=
+github.com/ysmnababan/naniAppProto v1.1.0 h1:0dxScUYoOX7Ix1/vjRvppsIdcePguYj3FicikpidQrU=
+github.com/ysmnababan/naniAppProto v1.1.0/go.mod h1:oZKTpSBf/6A1kJhindWusmtmwZvdSD32sg9aoNR5r8g=
 golang.org/x/crypto v0.27.0 h1:GXm2NjJrPaiv/h1tb2UH8QfgC/hOf/+z0p6PT8o1w7A=
 golang.org/x/crypto v0.27.0/go.mod h1:1Xngt8kV6Dvbssa53Ziq6Eqn0HqbZi5Z6R0ZpwQzt70=
 golang.org/x/net v0.28.0 h1:a9JDOJc5GMUJ0+UDqmLT86WiEy7iWyIhz8gz8E4e5hE=
