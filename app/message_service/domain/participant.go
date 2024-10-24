@@ -4,4 +4,5 @@ type Participant struct{
 	ParticipantID string
 	UserID string
 	Username string
+	PhoneNumber string
 }

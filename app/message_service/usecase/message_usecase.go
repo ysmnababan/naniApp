@@ -18,12 +18,12 @@ type MessageUsecase struct {
 type MessageUsecaseI interface {
 	CreateGroupChat(group *domain.Conversation) (*domain.Conversation, error)
 	CreatePrivateChat(group *domain.Conversation) (*domain.Conversation, error)
-	AddParticipant(user_id, conv_id string) (*domain.Conversation, error)
+	AddNewMember(user_id, conv_id string) (*domain.Conversation, error)
 
 	SaveMessage(conv_id string, msg *domain.Message) (*domain.Message, error)
-	GetConversatonMessage(conv_id string) (*domain.Conversation, error)
+	GetConversationMessage(conv_id string) (*domain.Conversation, error)
 	UnsentMessage(msg *domain.Message) error
-	GetMemberList(conv_id string) (*domain.Conversation, error)
+	GetMemberList(conv_id string) ([]*domain.Participant, error)
 	ReadByList(message_id string) ([]*domain.Participant, error)
 }
 
@@ -36,29 +36,48 @@ func (u *MessageUsecase) CreateGroupChat(group *domain.Conversation) (*domain.Co
 		return nil, helper.ErrParam
 	}
 
-	// creates uuid
-	group.ConvID = generateUUIDv7()
-
 	// ensure each member is exist
 	for i := range group.Participants {
 		_, err := u.UserClient.GetUser(context.Background(),
-			&pb.GetUserReq{UserId: group.Participants[i].UserID})
+		&pb.GetUserReq{UserId: group.Participants[i].UserID})
 		if err != nil {
-			return nil, helper.ErrNoUser
+			return nil, err
 		}
 		
 		// generate participant id
 		group.Participants[i].ParticipantID = generateUUIDv7()
 	}
 
+	// creates uuid
+	group.ConvID = generateUUIDv7()
+
 	err := u.MessageRepoI.CreateConversation(group)
 	if err != nil {
 		return nil, err
 	}
 
-	return nil, nil
-
+	return group, nil
 }
+
+func (u *MessageUsecase)CreatePrivateChat(group *domain.Conversation) (*domain.Conversation, error){
+	if group.ConvType != "private" {
+		return nil, helper.ErrParam
+	}
+
+	// private chat contains 2 member
+	if len(group.Participants) != 2 {
+		return nil, helper.ErrParam
+	}
+
+
+	// creates uuid
+	group.ConvID = generateUUIDv7()
+
+
+	// 
+	return nil, nil
+}
+
 
 func generateUUIDv7() string {
 	// creates uuid
