@@ -9,6 +9,7 @@ The application is divided into several microservices which implemented using gR
 2. Database Design
 The database is designed with scalability and searchability in mind. Below are the key tables and their relationships:
     Users: Stores user information.
+    Phonebook: Stores user contacs
     Conversations: Represents both private and group conversations.
     Participants: Links users to conversations.
     Messages: Stores message content and metadata.
@@ -25,7 +26,11 @@ User Service Endpoints:
     POST /api/users/register
     POST /api/users/login
     GET /api/user/                         -- fetch user profile
-    PUT /api/user/                         -- edit user profile
+    PUT /api/user/                         -- edit user profile\
+
+    POST /api/contact                      -- add new contact 
+    PUT /api/contact/{phonebook_id}        -- edit nickname
+    GET /api/contacts                      -- get all contacts
 
 Message Service Endpoints:
 The Service interact with User Service to get user data. Also interacting with Notification Service to push notifications when message is being sent
