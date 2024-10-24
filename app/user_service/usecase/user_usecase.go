@@ -45,8 +45,8 @@ type UserUsecaseI interface {
 	UpdateUserData(user *domain.User) (*domain.User, error)
 
 	GetContacts(user_id string) ([]*domain.Phonebook, error)
-	CreateNewContact(phone_number string, contact *domain.Phonebook) error
-	EditNickname(nickname string, phonebook_id string) error
+	CreateNewContact(phone_number string, contact *domain.Phonebook) (*domain.Phonebook, error)
+	EditNickname(nickname string, phonebook_id string) (*domain.Phonebook, error)
 }
 
 func (u *UserUsecase) GetContacts(user_id string) ([]*domain.Phonebook, error) {
@@ -61,22 +61,22 @@ func (u *UserUsecase) GetContacts(user_id string) ([]*domain.Phonebook, error) {
 	return res, nil
 }
 
-func (u *UserUsecase) CreateNewContact(phone_number string, contact *domain.Phonebook) error {
+func (u *UserUsecase) CreateNewContact(phone_number string, contact *domain.Phonebook) (*domain.Phonebook, error) {
 	if phone_number == "" || contact.UserID == "" {
-		return helper.ErrParam
+		return nil, helper.ErrParam
 	}
 
 	// fetch user data using phone number
 	user, err := u.UserRepositoryI.FetchUserByPhone(phone_number)
 	if err != nil {
 		// user not found
-		return err
+		return nil, err
 	}
 
 	// ensure no duplicate contact id for one user id
 	isUnique, err := u.UserRepositoryI.IsContactUnique(contact.UserID, contact.ContactID)
 	if err != nil || !isUnique {
-		return err
+		return nil, err
 	}
 
 	// generate uuid
@@ -92,21 +92,21 @@ func (u *UserUsecase) CreateNewContact(phone_number string, contact *domain.Phon
 
 	err = u.UserRepositoryI.CreateContact(contact)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return contact, nil
 }
 
-func (u *UserUsecase) EditNickname(nickname string, phonebook_id string) error {
+func (u *UserUsecase) EditNickname(nickname string, phonebook_id string) (*domain.Phonebook, error) {
 	if phonebook_id == "" || nickname == "" {
-		return helper.ErrParam
+		return nil, helper.ErrParam
 	}
 
-	err := u.UserRepositoryI.UpdateNickname(phonebook_id, nickname)
+	out, err := u.UserRepositoryI.UpdateNickname(phonebook_id, nickname)
 	if err != nil {
-		return nil
+		return nil, err
 	}
-	return nil
+	return out, nil
 }
 
 func (u *UserUsecase) Login(email, password string) (string, error) {

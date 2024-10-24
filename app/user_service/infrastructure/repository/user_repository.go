@@ -22,7 +22,7 @@ type UserRepositoryI interface {
 
 	FetchAllContact(user_id string) ([]*domain.Phonebook, error)
 	CreateContact(contact *domain.Phonebook) error
-	UpdateNickname(phonebook_id, nickname string) error
+	UpdateNickname(phonebook_id, nickname string) (*domain.Phonebook, error)
 	IsContactUnique(user_id, contact_id string) (bool, error)
 }
 
@@ -37,22 +37,28 @@ func (r *Repo) IsContactUnique(user_id, contact_id string) (bool, error) {
 	return false, nil
 }
 
-func (r *Repo) UpdateNickname(phonebook_id, nickname string) error {
+func (r *Repo) UpdateNickname(phonebook_id, nickname string) (*domain.Phonebook, error) {
 	phonebook := models.Phonebook{}
 	res := r.DB.First(&phonebook, phonebook_id)
 	if res.Error != nil {
 		if res.Error == gorm.ErrRecordNotFound {
-			return helper.ErrNoData
+			return nil, helper.ErrNoData
 		}
-		return res.Error
+		return nil, res.Error
 	}
 	phonebook.Nickname = nickname
 	res = r.DB.Save(&phonebook)
 	if res.Error != nil {
-		return res.Error
+		return nil, res.Error
 	}
 
-	return nil
+	out := &domain.Phonebook{
+		PhonebookID :phonebook.PhonebookID,
+		UserID      :phonebook.UserID,
+		ContactID   :phonebook.ContactID,
+		Nickname    :phonebook.Nickname,
+	}
+	return out, nil
 }
 
 func (r *Repo) CreateContact(contact *domain.Phonebook) error {
