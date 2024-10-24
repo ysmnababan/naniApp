@@ -13,14 +13,87 @@ type Repo struct {
 }
 
 type UserRepositoryI interface {
+	FetchUserByPhone(phone_number string) (*domain.User, error)
 	FetchUserByEmail(email string) (*domain.User, error)
 	FetchUserByID(user_id string) (*domain.User, error)
 	IsUserExist(email, phone_number string) error
 	CreateUser(user *domain.User) error
 	UpdateUser(user *domain.User) error
+
+	FetchAllContact(user_id string) ([]*domain.Phonebook, error)
+	CreateContact(contact *domain.Phonebook) error
+	UpdateNickname(phonebook_id, nickname string) error
+	IsContactUnique(user_id, contact_id string) (bool, error)
 }
 
-func (r *Repo)FetchUserByPhone(phone_number string) (*domain.User, error){
+func (r *Repo) IsContactUnique(user_id, contact_id string) (bool, error) {
+	res := r.DB.Where("user_id=? and contact_id=?", user_id, contact_id).First(&models.Phonebook{})
+	if res.Error != nil && res.Error == gorm.ErrRecordNotFound {
+		return true, nil
+	}
+	if res.Error != nil {
+		return false, res.Error
+	}
+	return false, nil
+}
+
+func (r *Repo) UpdateNickname(phonebook_id, nickname string) error {
+	phonebook := models.Phonebook{}
+	res := r.DB.First(&phonebook, phonebook_id)
+	if res.Error != nil {
+		if res.Error == gorm.ErrRecordNotFound {
+			return helper.ErrNoData
+		}
+		return res.Error
+	}
+	phonebook.Nickname = nickname
+	res = r.DB.Save(&phonebook)
+	if res.Error != nil {
+		return res.Error
+	}
+
+	return nil
+}
+
+func (r *Repo) CreateContact(contact *domain.Phonebook) error {
+	phonebook := models.Phonebook{
+		PhonebookID: contact.PhonebookID,
+		UserID:      contact.UserID,
+		ContactID:   contact.ContactID,
+		Nickname:    contact.Nickname,
+	}
+
+	res := r.DB.Create(&phonebook)
+	if res.Error != nil {
+		return res.Error
+	}
+
+	return nil
+}
+
+func (r *Repo) FetchAllContact(user_id string) ([]*domain.Phonebook, error) {
+	phonebooks := []models.Phonebook{}
+	res := r.DB.Where("user_id=?", user_id).Find(&phonebooks)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+
+	// change model to domain
+	out := []*domain.Phonebook{}
+	for i := range phonebooks {
+		contact := &domain.Phonebook{
+			PhonebookID: phonebooks[i].PhonebookID,
+			UserID:      phonebooks[i].UserID,
+			ContactID:   phonebooks[i].ContactID,
+			Nickname:    phonebooks[i].Nickname,
+		}
+
+		out = append(out, contact)
+	}
+	return out, nil
+}
+
+func (r *Repo) FetchUserByPhone(phone_number string) (*domain.User, error) {
 	user := models.User{}
 	res := r.DB.Where("phone_number=?", phone_number).First(&user)
 	if res.Error != nil {

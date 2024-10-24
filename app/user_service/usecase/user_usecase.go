@@ -43,6 +43,70 @@ type UserUsecaseI interface {
 	Register(user *domain.User) error
 	GetUserData(user_id string) (*domain.User, error)
 	UpdateUserData(user *domain.User) (*domain.User, error)
+
+	GetContacts(user_id string) ([]*domain.Phonebook, error)
+	CreateNewContact(phone_number string, contact *domain.Phonebook) error
+	EditNickname(nickname string, contact *domain.Phonebook) error
+}
+
+func (u *UserUsecase) GetContacts(user_id string) ([]*domain.Phonebook, error) {
+	if user_id == "" {
+		return nil, helper.ErrInvalidId
+	}
+
+	res, err := u.UserRepositoryI.FetchAllContact(user_id)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (u *UserUsecase) CreateNewContact(phone_number string, contact *domain.Phonebook) error {
+	if phone_number == "" || contact.UserID == "" {
+		return helper.ErrParam
+	}
+
+	// fetch user data using phone number
+	user, err := u.UserRepositoryI.FetchUserByPhone(phone_number)
+	if err != nil {
+		// user not found
+		return err
+	}
+
+	// ensure no duplicate contact id for one user id
+	isUnique, err := u.UserRepositoryI.IsContactUnique(contact.UserID, contact.ContactID)
+	if err != nil || !isUnique {
+		return err
+	}
+
+	// generate uuid
+	uuidV7 := uuidv7.New()
+	contact.PhonebookID = uuidV7.String()
+
+	// populate contact data
+	contact.ContactID = user.UserID
+	if contact.Nickname == "" {
+		// registered name is default name
+		contact.Nickname = user.Username
+	}
+
+	err = u.UserRepositoryI.CreateContact(contact)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (u *UserUsecase) EditNickname(nickname string, phonebook_id string) error {
+	if phonebook_id == "" || nickname == "" {
+		return helper.ErrParam
+	}
+
+	err := u.UserRepositoryI.UpdateNickname(phonebook_id, nickname)
+	if err != nil {
+		return nil
+	}
+	return nil
 }
 
 func (u *UserUsecase) Login(email, password string) (string, error) {
