@@ -20,16 +20,21 @@ func init() {
 }
 
 func main() {
-	conn, err := grpc.Dial("localhost:"+os.Getenv("USER_PORT"), grpc.WithInsecure())
-	if err != nil {
-		log.Fatalf("did not connect: %v", err)
-	}
-	defer conn.Close()
+	app_env := os.Getenv("APP_ENV")
 
-	client := pb.NewUserServiceClient(conn)
+	var userClient pb.UserServiceClient
+	if app_env == "development" {
+		conn, err := grpc.Dial(os.Getenv("GRPC_USER_SERVICE_URL"), grpc.WithInsecure())
+		if err != nil {
+			log.Fatalf("did not connect: %v", err)
+		}
+		defer conn.Close()
+		userClient = pb.NewUserServiceClient(conn)
+	}
+
 	db := database.Connect()
 	messageRepo := &repository.Repo{DB: db}
-	messageUsecase := &usecase.MessageUsecase{MessageRepoI: messageRepo, UserClient: client}
+	messageUsecase := &usecase.MessageUsecase{MessageRepoI: messageRepo, UserClient: userClient}
 	_ = messageUsecase
 
 }
