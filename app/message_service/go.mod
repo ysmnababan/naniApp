@@ -3,7 +3,6 @@ module message_service
 go 1.22.2
 
 require (
-	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/joho/godotenv v1.5.1
 	github.com/labstack/echo/v4 v4.12.0
 	github.com/samborkent/uuidv7 v0.0.0-20231110121620-f2e19d87e48b
